@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחשבון שנה אישית בנומרולוגיה</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0e6ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #8a2be2;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            color: white;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: calc(100% - 22px);
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4a0080;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #3a0060;
+        }
+        #result {
+            margin-top: 20px;
+            text-align: right;
+        }
+        .year-result {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>מחשבון שנה אישית בנומרולוגיה</h1>
+        <input type="date" id="birthdate" required>
+        <br>
+        <button onclick="calculatePersonalYears()">חשב שנים אישיות</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculatePersonalYears() {
+            const birthdate = new Date(document.getElementById('birthdate').value);
+            const day = birthdate.getDate();
+            const month = birthdate.getMonth() + 1;
+            const birthYear = birthdate.getFullYear();
+
+            let result = '';
+
+            for (let currentYear = 2023; currentYear <= 2027; currentYear++) {
+                let personalYear = calculatePersonalYear(day, month, currentYear);
+                let startDate = new Date(currentYear, month - 1, day);
+                let endDate = new Date(currentYear + 1, month - 1, day);
+                let age = currentYear - birthYear;
+
+                // Format dates
+                let startDateStr = formatDate(startDate);
+                let endDateStr = formatDate(endDate);
+
+                result += `<div class="year-result">
+                    יום הולדת ${age} - ${startDateStr} - ${endDateStr} שנה אישית ${personalYear}
+                </div>`;
+            }
+
+            document.getElementById('result').innerHTML = result;
+        }
+
+        function calculatePersonalYear(day, month, year) {
+            let x = reduceToSingleDigit(day);
+            let y = reduceToSingleDigit(month);
+            let z = reduceToSingleDigit(year);
+
+            let sum = x + y + z;
+            if (month >= 7) {
+                sum += 1;
+            }
+
+            return reduceToSingleDigit(sum);
+        }
+
+        function reduceToSingleDigit(num) {
+            while (num > 9) {
+                num = num.toString().split('').reduce((a, b) => parseInt(a) + parseInt(b), 0);
+            }
+            return num;
+        }
+
+        function formatDate(date) {
+            return date.getDate().toString().padStart(2, '0') + '.' +
+                   (date.getMonth() + 1).toString().padStart(2, '0') + '.' +
+                   date.getFullYear();
+        }
+    </script>
+</body>
+</html>
